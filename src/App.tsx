@@ -1,7 +1,7 @@
 import { Activity, AlertTriangle, CheckCircle2, FileImage, Loader2, Server, UploadCloud, X } from "lucide-react";
 import { ChangeEvent, DragEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { ApiError, getApiBaseUrl, getHealth, predictImage } from "./services/apiClient";
+import { ApiError, getApiBaseUrl, getBackendAssetUrl, getHealth, predictImage } from "./services/apiClient";
 import type { HealthResponse, PredictionResponse } from "./types/api";
 
 const ACCEPTED_FORMATS = ["image/jpeg", "image/png", "image/bmp", "image/tiff"];
@@ -296,37 +296,14 @@ function App() {
                   )}
                 </div>
 
-                {(isDisplayableImagePath(prediction.preview_path) || isDisplayableImagePath(prediction.mask_path)) && (
+                {isDisplayableImagePath(prediction.preview_path) && (
                   <div className="output-media">
-                    {isDisplayableImagePath(prediction.preview_path) && (
-                      <figure>
-                        <img src={prediction.preview_path} alt="Vista previa de segmentacion" />
-                        <figcaption>Vista previa</figcaption>
-                      </figure>
-                    )}
-                    {isDisplayableImagePath(prediction.mask_path) && (
-                      <figure>
-                        <img src={prediction.mask_path} alt="Mascara final generada por el modelo" />
-                        <figcaption>Mascara final</figcaption>
-                      </figure>
-                    )}
+                    <figure>
+                      <img src={getBackendAssetUrl(prediction.preview_path)} alt="Vista previa de segmentacion con etiquetas vertebrales" />
+                      <figcaption>Vista previa segmentada</figcaption>
+                    </figure>
                   </div>
                 )}
-
-                <div className="path-list">
-                  <div>
-                    <span>Imagen guardada</span>
-                    <code>{prediction.image.saved_path}</code>
-                  </div>
-                  <div>
-                    <span>Mascara final</span>
-                    <code>{prediction.mask_path ?? "Pendiente de integracion"}</code>
-                  </div>
-                  <div>
-                    <span>Vista previa</span>
-                    <code>{prediction.preview_path ?? "Pendiente de integracion"}</code>
-                  </div>
-                </div>
               </div>
             )}
           </div>

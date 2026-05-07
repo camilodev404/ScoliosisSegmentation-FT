@@ -34,7 +34,7 @@ Usuario
   -> ejecuta inferencia
   -> frontend envia imagen al microservicio
   -> microservicio responde con resultado del modelo
-  -> frontend muestra etiquetas, mascara y preview cuando esten disponibles
+  -> frontend muestra etiquetas detectadas, mascara final y vista previa
 ```
 
 ## Estructura del Repositorio
@@ -112,6 +112,29 @@ cd ../ScoliosisSegmentation-MS
 uvicorn app.main:app --reload
 ```
 
+## Ejecucion con Docker Compose
+
+El proyecto completo se puede levantar desde la carpeta padre `PROYECTO_SCOLIOSIS`, donde esta el archivo `docker-compose.yml`.
+
+```bash
+cd /Users/camilo/Documents/WorkSpace/IA-MASTER/PROYECTO_SCOLIOSIS
+docker compose up --build
+```
+
+Servicios expuestos:
+
+```text
+Frontend: http://127.0.0.1:5173
+API:      http://127.0.0.1:8000/api/v1/health
+Docs API: http://127.0.0.1:8000/docs
+```
+
+Para detener todo:
+
+```bash
+docker compose down
+```
+
 ## Scripts
 
 ```bash
@@ -128,4 +151,3 @@ npm run lint     # revision estatica
 - TypeScript
 - Lucide React para iconografia
 - CSS modularizado en `src/styles/global.css`
-

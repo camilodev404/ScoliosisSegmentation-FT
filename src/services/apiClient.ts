@@ -61,3 +61,13 @@ export function getApiBaseUrl(): string {
   return API_BASE_URL;
 }
 
+export function getBackendAssetUrl(path: string): string {
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+  const apiUrl = new URL(API_BASE_URL);
+  apiUrl.pathname = path;
+  apiUrl.search = "";
+  apiUrl.hash = "";
+  return apiUrl.toString();
+}
