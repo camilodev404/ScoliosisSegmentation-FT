@@ -1,10 +1,43 @@
 # ScoliosisSegmentation-FT
 
-Frontend React para consumir el microservicio `ScoliosisSegmentation-MS` y ofrecer una experiencia grafica para cargar radiografias, ejecutar inferencia y visualizar resultados de segmentacion.
+## Grupo 18
 
-La aplicacion permite seleccionar o arrastrar una radiografia de columna, consultar el estado del microservicio, enviar la imagen a `POST /api/v1/predict` y visualizar la respuesta devuelta por el backend.
+Autores de la solucion:
 
-## Estructura Base
+- Cristian Camilo Nino Rincon
+- Integrante pendiente 2
+- Integrante pendiente 3
+- Integrante pendiente 4
+
+## Proposito
+
+Frontend React para la experiencia de usuario de **Segmentacion de Vertebras**. La aplicacion consume el microservicio `ScoliosisSegmentation-MS` y permite cargar una radiografia de columna, consultar el estado del backend, ejecutar inferencia y visualizar la respuesta del modelo.
+
+Este repositorio corresponde a la capa de interfaz grafica del proyecto. La investigacion, entrenamiento y notebooks viven en `ScoliosisSegmentation`; el API de inferencia vive en `ScoliosisSegmentation-MS`.
+
+## Experiencia Implementada
+
+- Panel de estado del microservicio.
+- Verificacion de disponibilidad de modelos.
+- Carga de imagen por selector o drag and drop.
+- Vista previa local de la radiografia.
+- Envio de la imagen al endpoint `POST /api/v1/predict`.
+- Visualizacion de respuesta: ID de prediccion, dimensiones, etiquetas detectadas, ruta de mascara y ruta de preview.
+- Manejo de errores `400` y `503`, incluyendo lista de modelos faltantes.
+
+## Flujo de Uso
+
+```text
+Usuario
+  -> carga radiografia
+  -> revisa vista previa
+  -> ejecuta inferencia
+  -> frontend envia imagen al microservicio
+  -> microservicio responde con resultado del modelo
+  -> frontend muestra etiquetas, mascara y preview cuando esten disponibles
+```
+
+## Estructura del Repositorio
 
 ```text
 ScoliosisSegmentation-FT/
@@ -27,24 +60,16 @@ ScoliosisSegmentation-FT/
 
 ## Microservicio Consumido
 
-Este frontend consumira principalmente:
+El frontend consume los endpoints del repositorio `ScoliosisSegmentation-MS`:
 
 ```text
 GET  /api/v1/health
 POST /api/v1/predict
 ```
 
-del repositorio `ScoliosisSegmentation-MS`.
+`GET /api/v1/health` se usa para saber si el backend esta disponible y si los modelos estan listos.
 
-## Experiencia Implementada
-
-- Panel de estado del microservicio.
-- Verificacion de disponibilidad de modelos.
-- Carga de imagen por selector o drag and drop.
-- Vista previa local de la radiografia.
-- Envio de la imagen al endpoint `POST /api/v1/predict`.
-- Visualizacion de respuesta: ID de prediccion, dimensiones, etiquetas, rutas de mascara y preview.
-- Manejo de errores `400` y `503`, incluyendo lista de modelos faltantes.
+`POST /api/v1/predict` recibe la radiografia y devuelve la respuesta de inferencia.
 
 ## Configuracion
 
@@ -80,7 +105,7 @@ Abrir en el navegador:
 http://127.0.0.1:5173
 ```
 
-Para que la inferencia funcione, el microservicio debe estar corriendo:
+Para que la inferencia funcione, el microservicio debe estar corriendo en otra terminal:
 
 ```bash
 cd ../ScoliosisSegmentation-MS
@@ -96,8 +121,11 @@ npm run preview  # previsualizar build
 npm run lint     # revision estatica
 ```
 
-## Notas
+## Tecnologia
 
-- Framework: React + Vite + TypeScript.
-- Iconografia: `lucide-react`.
-- Los archivos `.gitkeep` permiten versionar carpetas vacias mientras crece la interfaz.
+- React
+- Vite
+- TypeScript
+- Lucide React para iconografia
+- CSS modularizado en `src/styles/global.css`
+

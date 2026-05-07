@@ -130,7 +130,7 @@ function App() {
         <header className="topbar">
           <div>
             <p className="eyebrow">Scoliosis Segmentation</p>
-            <h1>Inferencia thoracolumbar</h1>
+            <h1>Segmentacion de Vertebras</h1>
           </div>
           <div className={`service-pill ${modelReady ? "is-ready" : "is-warning"}`}>
             {modelReady ? <CheckCircle2 size={18} /> : <AlertTriangle size={18} />}
