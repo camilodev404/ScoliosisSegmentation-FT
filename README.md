@@ -5,9 +5,9 @@
 Autores de la solucion:
 
 - Cristian Camilo Nino Rincon
-- Integrante pendiente 2
-- Integrante pendiente 3
-- Integrante pendiente 4
+- Sandra Milena Pantoja Cárdenas
+- Yeisson Andres Galindo Villagran
+- Jhon Arley Jimenez Marin
 
 ## Proposito
 
