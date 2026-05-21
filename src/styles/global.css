@@ -31,7 +31,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -162,9 +163,11 @@ h2 {
 .status-item span,
 .metrics-grid span,
 .labels-box > span,
+.policy-box > span,
 .path-list span,
 .prediction-header span,
-.file-row span {
+.file-row span,
+.case-control span {
   display: block;
   color: var(--muted);
   font-size: 0.78rem;
@@ -312,6 +315,23 @@ h2 {
   overflow-wrap: anywhere;
 }
 
+.case-control {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.case-control select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  color: var(--ink);
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-weight: 800;
+}
+
 .icon-button {
   width: 36px;
   height: 36px;
@@ -400,6 +420,7 @@ h2 {
 .prediction-header,
 .metrics-grid,
 .labels-box,
+.policy-box,
 .output-media,
 .path-list > div {
   border: 1px solid var(--line);
@@ -447,6 +468,14 @@ h2 {
   border-left: 1px solid var(--line);
 }
 
+.metrics-grid > div:nth-child(4) {
+  border-left: 0;
+}
+
+.metrics-grid > div:nth-child(n + 4) {
+  border-top: 1px solid var(--line);
+}
+
 .metrics-grid strong {
   display: block;
   margin-top: 5px;
@@ -455,6 +484,22 @@ h2 {
 
 .labels-box {
   padding: 14px;
+}
+
+.policy-box {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+}
+
+.policy-box strong,
+.policy-box p {
+  overflow-wrap: anywhere;
+}
+
+.policy-box p {
+  color: var(--muted);
+  line-height: 1.45;
 }
 
 .label-list {
@@ -473,6 +518,12 @@ h2 {
   border: 1px solid #bfd7ff;
   border-radius: 8px;
   font-weight: 900;
+}
+
+.label-list.muted span {
+  color: #5c4630;
+  background: #fff3df;
+  border-color: #efd0a0;
 }
 
 .labels-box p {
