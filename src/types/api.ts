@@ -27,9 +27,17 @@ export type PredictionResponse = {
   status: string;
   image: PredictionImageInfo;
   predicted_labels: string[];
+  raw_labels: string[];
+  trimmed_labels: string[];
   vertebrae: VertebraInfo[];
   mask_path: string | null;
   preview_path: string | null;
+  pred_last_label: string | null;
+  raw_last_label: string | null;
+  pipeline_variant: string;
+  clipping_policy: string;
+  case_type: "unknown" | "normal" | "scoliosis" | string;
+  model_versions: Record<string, string>;
   message: string;
 };
 

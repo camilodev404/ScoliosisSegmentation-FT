@@ -41,9 +41,10 @@ export async function getHealth(): Promise<HealthResponse> {
   return response.json() as Promise<HealthResponse>;
 }
 
-export async function predictImage(image: File): Promise<PredictionResponse> {
+export async function predictImage(image: File, caseType = "unknown"): Promise<PredictionResponse> {
   const formData = new FormData();
   formData.append("image", image);
+  formData.append("case_type", caseType);
 
   const response = await fetch(`${API_BASE_URL}/predict`, {
     method: "POST",

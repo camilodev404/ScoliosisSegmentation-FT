@@ -5,6 +5,11 @@ import { ApiError, getApiBaseUrl, getBackendAssetUrl, getHealth, predictImage } 
 import type { HealthResponse, PredictionResponse } from "./types/api";
 
 const ACCEPTED_FORMATS = ["image/jpeg", "image/png", "image/bmp", "image/tiff"];
+const CASE_TYPES = [
+  { value: "unknown", label: "No especificado" },
+  { value: "normal", label: "Normal" },
+  { value: "scoliosis", label: "Escoliosis" },
+] as const;
 
 function isDisplayableImagePath(path: string | null): path is string {
   if (!path) return false;
@@ -22,6 +27,7 @@ function App() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
+  const [caseType, setCaseType] = useState<(typeof CASE_TYPES)[number]["value"]>("unknown");
   const [error, setError] = useState<string | null>(null);
   const [missingArtifacts, setMissingArtifacts] = useState<string[]>([]);
   const [isCheckingHealth, setIsCheckingHealth] = useState(false);
@@ -109,7 +115,7 @@ function App() {
     setPrediction(null);
 
     try {
-      const response = await predictImage(selectedFile);
+      const response = await predictImage(selectedFile, caseType);
       setPrediction(response);
       await refreshHealth();
     } catch (err) {
@@ -217,6 +223,17 @@ function App() {
               </div>
             )}
 
+            <label className="case-control">
+              <span>Tipo de caso</span>
+              <select value={caseType} onChange={(event) => setCaseType(event.target.value as typeof caseType)}>
+                {CASE_TYPES.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
             <button className="primary-button" onClick={submitPrediction} disabled={isPredicting || !selectedFile}>
               {isPredicting ? <Loader2 className="spin" size={18} /> : <Activity size={18} />}
               {isPredicting ? "Ejecutando inferencia" : "Ejecutar inferencia"}
@@ -281,6 +298,26 @@ function App() {
                     <span>Vertebras</span>
                     <strong>{prediction.predicted_labels.length}</strong>
                   </div>
+                  <div>
+                    <span>Ultima visible</span>
+                    <strong>{prediction.pred_last_label ?? "Sin estimacion"}</strong>
+                  </div>
+                  <div>
+                    <span>Variante</span>
+                    <strong>{prediction.pipeline_variant}</strong>
+                  </div>
+                  <div>
+                    <span>Caso</span>
+                    <strong>{prediction.case_type}</strong>
+                  </div>
+                </div>
+
+                <div className="policy-box">
+                  <span>Politica final</span>
+                  <strong>{prediction.clipping_policy}</strong>
+                  <p>
+                    Modelos: {Object.values(prediction.model_versions).filter(Boolean).join(", ")}
+                  </p>
                 </div>
 
                 <div className="labels-box">
@@ -295,6 +332,17 @@ function App() {
                     <p>{prediction.message}</p>
                   )}
                 </div>
+
+                {prediction.trimmed_labels.length > 0 && (
+                  <div className="labels-box">
+                    <span>Etiquetas removidas por clipping</span>
+                    <div className="label-list muted">
+                      {prediction.trimmed_labels.map((label) => (
+                        <span key={label}>{label}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {isDisplayableImagePath(prediction.preview_path) && (
                   <div className="output-media">
