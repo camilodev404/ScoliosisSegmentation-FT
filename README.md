@@ -22,7 +22,7 @@ Este repositorio corresponde a la capa de interfaz grafica del proyecto. La inve
 - Carga de imagen por selector o drag and drop.
 - Vista previa local de la radiografia.
 - Envio de la imagen al endpoint `POST /api/v1/predict`.
-- Visualizacion de respuesta: ID de prediccion, dimensiones, etiquetas detectadas, ruta de mascara y ruta de preview.
+- Visualizacion de respuesta: ID de prediccion, dimensiones, etiquetas detectadas, etiquetas removidas por clipping, politica final, modelos usados y vista previa segmentada.
 - Manejo de errores `400` y `503`, incluyendo lista de modelos faltantes.
 
 ## Flujo de Uso
@@ -82,8 +82,25 @@ cp .env.example .env
 Variable disponible:
 
 ```text
+VITE_API_BASE_URL=/api/v1
+```
+
+En ejecucion con Docker Compose, el valor recomendado es `/api/v1`. El contenedor Nginx del frontend actua como proxy:
+
+```text
+/api/     -> servicio api:8000/api/
+/results/ -> servicio api:8000/results/
+```
+
+Con esta configuracion no se requiere compilar el frontend con la IP publica de la maquina. El usuario accede al frontend por `http://IP_PUBLICA_O_DOMINIO:5173` y las llamadas al backend se resuelven internamente dentro de Docker.
+
+Para desarrollo local sin Docker, si el backend se ejecuta directamente en el host, se puede usar:
+
+```text
 VITE_API_BASE_URL=http://127.0.0.1:8000/api/v1
 ```
+
+No se requieren credenciales para usar la interfaz. La aplicacion solo necesita conectividad con el microservicio de inferencia.
 
 ## Ejecucion Local
 
@@ -114,11 +131,20 @@ uvicorn app.main:app --reload
 
 ## Ejecucion con Docker Compose
 
-El proyecto completo se puede levantar desde la carpeta padre `PROYECTO_SCOLIOSIS`, donde esta el archivo `docker-compose.yml`.
+El proyecto completo se levanta desde el repositorio `ScoliosisSegmentation-MS`, donde se ubica el archivo `docker-compose.yml`. Los repositorios `ScoliosisSegmentation-MS` y `ScoliosisSegmentation-FT` deben estar al mismo nivel de directorio:
+
+```text
+PROYECTO_SCOLIOSIS/
+├── ScoliosisSegmentation-MS/
+│   └── docker-compose.yml
+└── ScoliosisSegmentation-FT/
+```
+
+Comando:
 
 ```bash
-cd /Users/camilo/Documents/WorkSpace/IA-MASTER/PROYECTO_SCOLIOSIS
-docker compose up --build
+cd ../ScoliosisSegmentation-MS
+docker compose up --build -d
 ```
 
 Servicios expuestos:
@@ -129,9 +155,17 @@ API:      http://127.0.0.1:8000/api/v1/health
 Docs API: http://127.0.0.1:8000/docs
 ```
 
+En despliegue remoto:
+
+```text
+Frontend: http://IP_PUBLICA_O_DOMINIO:5173
+API:      http://IP_PUBLICA_O_DOMINIO:5173/api/v1/health
+```
+
 Para detener todo:
 
 ```bash
+cd ../ScoliosisSegmentation-MS
 docker compose down
 ```
 
